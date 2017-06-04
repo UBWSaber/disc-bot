@@ -13,9 +13,14 @@ console.log("???");
 //var bot2 = new cleverbot("zxQJgE2hS6Lc8HvK", "myaSMhMQWFvgMTGlruZak0isSk9iFMCB");
 var bot = new Discord.Client();
 
-var theone = "pics/theone.png";
+var picture_path = "pics/";
 
 var sound_path = "sound/";
+
+var pictures_paths = {
+    'theone': picture_path + "theone.png",
+    'honokashy': picture_path + "honokashy.gif"
+}
 
 var mp3_paths = {
   "KAGUYA": sound_path + "kaguya.mp3",
@@ -241,11 +246,19 @@ bot.on("message", function(message)
   var msg_pieces = input.split(" ");
 
   if (input === "HONOKA STOP"){
-    bot.voiceConnection.disconnect();
+    bot.voiceConnections.array()[0].disconnect();
   }
 
   if (input === "HONOKA SHOW ME THE ONE"){
-    message.channel.send('', { files: [theone] });
+    message.channel.send('', { files: [pictures_paths['theone']] });
+  }
+  if (input === "HONOKA LEWD"){
+    if (message.channel.id == 139536008734572544){
+        message.channel.send("just kidding i dont have anything right now");
+    }
+    else {
+        message.channel.send('', { files: [pictures_paths['honokashy']] });
+    }
   }
 
   if (relates_to_me(message) || msg_pieces[0] === "PLAY"){
@@ -273,9 +286,11 @@ bot.on("message", function(message)
   };
 });
 
+//HOnoka login
 bot.login("MzIwMzU5Njk2MTc3Mjk5NDU2.DBOVwQ.xW2PegD08IoX17GLzOG2i_H8zSI");
 
-
+//Chika login
+//bot.login("MjM5NTk2NjY0ODQxNTY4MjU3.DBVCiQ.A2ySg03qFMfkKSoPeJ4OcHw7kiQ");
 
 
 
