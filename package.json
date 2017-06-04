@@ -1,0 +1,15 @@
+{
+  "name": "discord_bots",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Honoka bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.heroku.com/frozen-waters-38759.git"
+  },
+  "author": "Gordon Du",
+  "license": "ISC"
+}
