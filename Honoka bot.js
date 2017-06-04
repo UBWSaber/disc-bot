@@ -1,6 +1,6 @@
 var Discord = require("discord.js");
 var fs = require("fs");
-var linesFile = "C:\\Users\\Gordon\\Desktop\\a\\Discord bots\\lines.json";
+var linesFile = "lines.json";
 var file1 = fs.readFileSync(linesFile);
 
 var all_lines = JSON.parse(file1);
@@ -13,7 +13,7 @@ console.log("???");
 //var bot2 = new cleverbot("zxQJgE2hS6Lc8HvK", "myaSMhMQWFvgMTGlruZak0isSk9iFMCB");
 var bot = new Discord.Client();
 
-var sound_path = "C:\\Users\\Gordon\\Desktop\\a\\Discord bots\\sound\\";
+var sound_path = "sound\\";
 
 var mp3_paths = {
   "KAGUYA": sound_path + "kaguya.mp3",
@@ -77,8 +77,8 @@ function decide_response_function(msg_pieces, message, honoka_role, input, is_me
       if (msg_pieces[1] === "YOUTUBE"){
          var youtube_data = {
               'link': msg_pieces[2],
-              'seek': msg_pieces[3],
-              'volume': msg_pieces[4],
+              'seek': msg_pieces[msg_pieces.indexOf("TIME") - 1],
+              'volume': msg_pieces[msg_pieces.indexOf("VOLUME") - 1],
          }
 
          join_voice_channel(msg_pieces, message, youtube_data);
@@ -97,7 +97,7 @@ function decide_response_function(msg_pieces, message, honoka_role, input, is_me
 
 function play_youtube(youtube_data, voiceChannel) {
   const ytdl = require('ytdl-core');
-  const streamOptions = { 'seek': youtube_data['seek'], 'volume': 0.1, 'passes': 10}
+  const streamOptions = { seek: youtube_data['seek'], volume: youtube_data['volume'], passes: 1}
   voiceChannel.join()
   .then(connection => {
    const stream = ytdl(youtube_data['link'], { filter : 'audioonly' });
@@ -237,6 +237,10 @@ bot.on("message", function(message)
   var honoka_role = message.guild.roles.get("name", "Honoka");
   var input = message.content.toUpperCase();
   var msg_pieces = input.split(" ");
+
+  if (input === "HONOKA STOP"){
+    bot.voiceConnection.disconnect();
+  }
 
   if (relates_to_me(message) || msg_pieces[0] === "PLAY"){
       if (msg_pieces[0] === "PLAY" && msg_pieces[1] === "YOUTUBE"){
