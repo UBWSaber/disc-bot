@@ -15,7 +15,7 @@ var bot = new Discord.Client();
 
 var theone = "pics/theone.png";
 
-var sound_path = "sound\\";
+var sound_path = "sound/";
 
 var mp3_paths = {
   "KAGUYA": sound_path + "kaguya.mp3",
