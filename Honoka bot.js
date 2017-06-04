@@ -156,6 +156,7 @@ function send_special_line(message, msg_pieces, input){
 }
 
 function mentions_me(message){
+  console.log("mentions me");
     var mentions = Array.from(message.mentions.users.values())
     return mentions.includes(bot.user)
 }
@@ -260,7 +261,7 @@ bot.on("message", function(message)
         message.channel.send('', { files: [pictures_paths['honokashy']] });
     }
   }
-
+  console.log("testing");
   if (relates_to_me(message) || msg_pieces[0] === "PLAY"){
       if (msg_pieces[0] === "PLAY" && msg_pieces[1] === "YOUTUBE"){
           msg_pieces[2] = get_orig_link(message);
