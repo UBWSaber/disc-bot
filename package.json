@@ -11,5 +11,10 @@
     "url": "https://git.heroku.com/frozen-waters-38759.git"
   },
   "author": "Gordon Du",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.1.0",
+    "node-opus": "^0.2.6",
+    "ytdl-core": "^0.14.2"
+  }
 }

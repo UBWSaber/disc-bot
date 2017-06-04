@@ -13,6 +13,8 @@ console.log("???");
 //var bot2 = new cleverbot("zxQJgE2hS6Lc8HvK", "myaSMhMQWFvgMTGlruZak0isSk9iFMCB");
 var bot = new Discord.Client();
 
+var theone = "pics\\theone.png";
+
 var sound_path = "sound\\";
 
 var mp3_paths = {
@@ -142,9 +144,9 @@ function send_special_line(message, msg_pieces, input){
           //}
       }
   }
-  else{
-      message.channel.send("?");
-  }
+  // else{
+  //     message.channel.send("?");
+  // }
 
 }
 
@@ -240,6 +242,10 @@ bot.on("message", function(message)
 
   if (input === "HONOKA STOP"){
     bot.voiceConnection.disconnect();
+  }
+
+  if (input === "HONOKA SHOW ME THE ONE"){
+    message.channel.send('', { files: [theone] });
   }
 
   if (relates_to_me(message) || msg_pieces[0] === "PLAY"){
