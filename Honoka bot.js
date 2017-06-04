@@ -13,7 +13,7 @@ console.log("???");
 //var bot2 = new cleverbot("zxQJgE2hS6Lc8HvK", "myaSMhMQWFvgMTGlruZak0isSk9iFMCB");
 var bot = new Discord.Client();
 
-var theone = "pics\\theone.png";
+var theone = "pics/theone.png";
 
 var sound_path = "sound\\";
 
