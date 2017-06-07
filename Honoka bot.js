@@ -177,7 +177,7 @@ function relates_to_me(message){
     else { return false; }
 }
 
-var search_image = async(function(msg_pieces, message){
+var search_image = async function(msg_pieces, message){
     var score_min = 50;
     var score = String(Math.floor(Math.random() * (100 - score_min)) + score_min);
     var tag_string = String(msg_pieces.slice(2,msg_pieces.length)) + " score:" + score;
@@ -200,7 +200,7 @@ var search_image = async(function(msg_pieces, message){
 
     var source_link = "http://danbooru.donmai.us" + postArray[0].raw.file_url;
     message.channel.send(source_link);
-});
+};
 
 function phrase_pos(array, main, phrase, left, right){
     phrase_arr = phrase.split(" ");
