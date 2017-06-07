@@ -13,6 +13,8 @@
   "author": "Gordon Du",
   "license": "ISC",
   "dependencies": {
+    "asyncawait": "^1.0.6",
+    "danbooru": "^2.0.3",
     "discord.js": "^11.1.0",
     "node-opus": "^0.2.6",
     "ytdl-core": "^0.14.2"

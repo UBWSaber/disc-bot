@@ -2,6 +2,9 @@ var Discord = require("discord.js");
 var fs = require("fs");
 var linesFile = "lines.json";
 var file1 = fs.readFileSync(linesFile);
+var Danbooru = require("danbooru");
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
 
 var all_lines = JSON.parse(file1);
 
@@ -9,9 +12,10 @@ var lines = all_lines["lines1"];
 var lines2 = all_lines["lines2"];
 var lines3 = all_lines["lines3"];
 //var cleverbot = require("cleverbot.io");
-console.log("???");
+
 //var bot2 = new cleverbot("zxQJgE2hS6Lc8HvK", "myaSMhMQWFvgMTGlruZak0isSk9iFMCB");
 var bot = new Discord.Client();
+var Booru = new Danbooru("SuddenPanic", "5ls4P7qQj2G7tn-qI4Qn32vfmovjULHDho7F-f0eeCs");
 
 var picture_path = "pics/";
 
@@ -156,7 +160,7 @@ function send_special_line(message, msg_pieces, input){
 }
 
 function mentions_me(message){
-  console.log("mentions me");
+    console.log("mentions me");
     var mentions = Array.from(message.mentions.users.values())
     return mentions.includes(bot.user)
 }
@@ -172,6 +176,31 @@ function relates_to_me(message){
     }
     else { return false; }
 }
+
+var search_image = async(function(msg_pieces, message){
+    var score_min = 50;
+    var score = String(Math.floor(Math.random() * (100 - score_min)) + score_min);
+    var tag_string = String(msg_pieces.slice(2,msg_pieces.length)) + " score:" + score;
+
+    console.log(tag_string);
+
+    var postArray = await(Booru.posts({
+      limit: 1,
+      tags: tag_string,
+      random: true,
+    }));
+
+    while (postArray.length != 1){
+        postArray = await(Booru.posts({
+          limit: 1,
+          tags: tag_string,
+          random: true,
+        }));
+    };
+
+    var source_link = "http://danbooru.donmai.us" + postArray[0].raw.file_url;
+    message.channel.send(source_link);
+});
 
 function phrase_pos(array, main, phrase, left, right){
     phrase_arr = phrase.split(" ");
@@ -253,15 +282,20 @@ bot.on("message", function(message)
   if (input === "HONOKA SHOW ME THE ONE"){
     message.channel.send('', { files: [pictures_paths['theone']] });
   }
-  if (input === "HONOKA LEWD"){
-    if (message.channel.id == 139536008734572544){
-        message.channel.send("just kidding i dont have anything right now");
+
+  if (msg_pieces[0] === "HONOKA" && msg_pieces[1] === "LEWD"){
+    if (message.channel.id == 139536008734572544 || message.channel.id == 153707500070371328){
+        if (msg_pieces.length > 3){
+           message.channel.send("Too many tags!");
+        }
+        else{
+            search_image(msg_pieces, message);
+        }
     }
     else {
         message.channel.send('', { files: [pictures_paths['honokashy']] });
     }
   }
-  console.log("testing");
   if (relates_to_me(message) || msg_pieces[0] === "PLAY"){
       if (msg_pieces[0] === "PLAY" && msg_pieces[1] === "YOUTUBE"){
           msg_pieces[2] = get_orig_link(message);
