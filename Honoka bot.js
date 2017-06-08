@@ -202,6 +202,8 @@ var search_image = async function(msg_pieces, message){
         }
     }
 
+    tag_string = tag_string.replace(",", " ");
+
     var postArray = await(Booru.posts({
       limit: 1,
       tags: tag_string + score_string,
@@ -217,7 +219,7 @@ var search_image = async function(msg_pieces, message){
           random: true,
         }));
     };
-    console.log(postArray.length);
+
     if (postArray.length <= 0){
         var source_link = "No matches found!";
     }
@@ -299,7 +301,7 @@ bot.on("message", function(message)
   var honoka_role = message.guild.roles.get("name", "Honoka");
   var input = message.content.toUpperCase();
   var msg_pieces = input.split(" ");
-
+  bot.user.setUsername("Honoka")
   if (input === "HONOKA STOP"){
     bot.voiceConnections.array()[0].disconnect();
   }
