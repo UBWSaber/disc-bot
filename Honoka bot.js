@@ -26,6 +26,10 @@ var pictures_paths = {
     'honokashy': picture_path + "honokashy.gif"
 }
 
+var danbooru_tags = {
+    'RIVEN': 'riven_(league_of_legends)'
+}
+
 var mp3_paths = {
   "KAGUYA": sound_path + "kaguya.mp3",
   "WOOF": sound_path + "woof.mp3",
@@ -160,7 +164,6 @@ function send_special_line(message, msg_pieces, input){
 }
 
 function mentions_me(message){
-    console.log("mentions me");
     var mentions = Array.from(message.mentions.users.values())
     return mentions.includes(bot.user)
 }
@@ -178,27 +181,49 @@ function relates_to_me(message){
 }
 
 var search_image = async function(msg_pieces, message){
-    var score_min = 50;
-    var score = String(Math.floor(Math.random() * (100 - score_min)) + score_min);
-    var tag_string = String(msg_pieces.slice(2,msg_pieces.length)) + " score:" + score;
+    var score_gt = [];
+    var score_string = '';
+    var tags = msg_pieces.slice(2,msg_pieces.length);
+    var tag_string = String(tags);
 
-    console.log(tag_string);
+    score_gt = tags.filter(function( obj ) {
+      return obj.includes("SCORE>");
+    });
+
+    if (score_gt.length > 0){
+      tags.splice(tags.indexOf(score_gt[0]), 1)
+      tag_string = String(tags) + " ";
+
+        if (score_gt[0].split(">").length > 1){
+            var score_min = Number(score_gt[0].split(">")[1]);
+            var score = String(Math.floor(Math.random() * (100 - score_min)) + score_min);
+
+            score_string = "score:" + score;
+        }
+    }
 
     var postArray = await(Booru.posts({
       limit: 1,
-      tags: tag_string,
+      tags: tag_string + score_string,
       random: true,
     }));
 
-    while (postArray.length != 1){
+    while (postArray.length != 1 && score >= 10){
+        score -= 1;
+        score_string = "score:" + String(score);
         postArray = await(Booru.posts({
           limit: 1,
-          tags: tag_string,
+          tags: tag_string + score_string,
           random: true,
         }));
     };
-
-    var source_link = "http://danbooru.donmai.us" + postArray[0].raw.file_url;
+    console.log(postArray.length);
+    if (postArray.length <= 0){
+        var source_link = "No matches found!";
+    }
+    else{
+        var source_link = "http://danbooru.donmai.us" + postArray[0].raw.file_url;
+    }
     message.channel.send(source_link);
 };
 
@@ -285,15 +310,15 @@ bot.on("message", function(message)
 
   if (msg_pieces[0] === "HONOKA" && msg_pieces[1] === "LEWD"){
     if (message.channel.id == 139536008734572544 || message.channel.id == 153707500070371328){
-        if (msg_pieces.length > 3){
-           message.channel.send("Too many tags!");
+        if (msg_pieces.length > 4){
+           message.channel.send("There was an error!");
         }
         else{
             search_image(msg_pieces, message);
         }
     }
     else {
-        message.channel.send('', { files: [pictures_paths['honokashy']] });
+        message.channel.send('https://cdn.discordapp.com/attachments/153707500070371328/320824984651956224/honokashy.gif');
     }
   }
   if (relates_to_me(message) || msg_pieces[0] === "PLAY"){
