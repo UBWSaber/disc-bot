@@ -249,7 +249,7 @@ var search_image = async function(msg_pieces, message){
     });
 
     amount_tag = tags.filter(function( obj ) {
-      return obj.includes("LIMIT:");
+      return obj.includes("AMOUNT:");
     });
 
     // random_tag = tags.filter(function( obj ) {
@@ -293,13 +293,13 @@ var search_image = async function(msg_pieces, message){
       amount = Number(amount_value);
 
       if (amount > 4){
-          message.channel.send("Too many images! Baka!!!");
+          message.channel.send("Too many images! Idiot!!!");
           return;
       }
     }
 
     if (tag_string.split(" ").length > 2){
-        message.channel.send("Too many tags! Baka!!!");
+        message.channel.send("Too many tags! Idiot!!!");
     }
 
     tag_string = tag_string.replace(",", " ");
@@ -332,7 +332,7 @@ var search_image = async function(msg_pieces, message){
             }
         }
         else{
-            message.channel.send("Too many images! Baka!!!");
+            message.channel.send("Too many images! Idiot!!!");
         }
       }
       else {
