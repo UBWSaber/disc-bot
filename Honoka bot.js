@@ -30,6 +30,21 @@ var danbooru_tags = {
     'RIVEN': 'riven_(league_of_legends)'
 }
 
+var month_num = {
+    "01": 0,
+    "02": 1,
+    "03": 2,
+    "04": 3,
+    "05": 4,
+    "06": 5,
+    "07": 6,
+    "08": 7,
+    "09": 8,
+    "10": 9,
+    "11": 10,
+    "12": 11,
+}
+
 var mp3_paths = {
   "KAGUYA": sound_path + "kaguya.mp3",
   "WOOF": sound_path + "woof.mp3",
@@ -180,53 +195,157 @@ function relates_to_me(message){
     else { return false; }
 }
 
+function daysBetween( date1, date2 ) {
+  //Get 1 day in milliseconds
+  var one_day=1000*60*60*24;
+
+  // Convert both dates to milliseconds
+  var date1_ms = date1.getTime();
+  var date2_ms = date2.getTime();
+
+  // Calculate the difference in milliseconds
+  var difference_ms = date2_ms - date1_ms;
+
+  // Convert back to days and return
+  return Math.round(difference_ms/one_day);
+}
+
+function parse_date(date_string){
+    if (date_string.toUpperCase() == "TODAY"){
+        date = new Date();
+    }
+    else if (date_string.toUpperCase() == "YESTERDAY"){
+        date = new Date();
+        date = new Date(new Date().setDate(new Date().getDate()-1))
+    }
+    else{
+        date_string_array = date_string.split("-");
+
+        year_num = Number(date_string_array[0]);
+        mon_num = month_num[date_string_array[1]];
+        date_num = Number(date_string_array[2]);
+
+        date = new Date(year_num, mon_num, date_num);
+    }
+    return date;
+}
+
 var search_image = async function(msg_pieces, message){
     var score_gt = [];
     var score_string = '';
     var tags = msg_pieces.slice(2,msg_pieces.length);
     var tag_string = String(tags);
+    var random = true;
+    var limit = 10;
+    var page = 1;
+    var amount = 1;
 
     score_gt = tags.filter(function( obj ) {
       return obj.includes("SCORE>");
     });
 
+    popular_tag = tags.filter(function( obj ) {
+      return obj.includes("POPULAR:");
+    });
+
+    amount_tag = tags.filter(function( obj ) {
+      return obj.includes("LIMIT:");
+    });
+
+    // random_tag = tags.filter(function( obj ) {
+    //   return obj.includes("RANDOM:");
+    // });
+
     if (score_gt.length > 0){
       tags.splice(tags.indexOf(score_gt[0]), 1)
       tag_string = String(tags) + " ";
+      var score_gt_array = score_gt[0].split(">");
 
-        if (score_gt[0].split(">").length > 1){
-            var score_min = Number(score_gt[0].split(">")[1]);
+        if (score_gt_array.length > 1){
+            var score_min = Number(score_gt_array[1]);
             var score = String(Math.floor(Math.random() * (100 - score_min)) + score_min);
 
             score_string = "score:" + score;
         }
     }
+    else if (popular_tag.length > 0){
+      tags.splice(tags.indexOf(amount_tag[0]), 1)
+      tag_string = String(tags) + " ";
+      var popular_tag_array = popular_tag[0].split(":")
+
+      if (popular_tag_array.length > 1){
+          var today = new Date();
+          var age_date = parse_date(popular_tag_array[1]);
+
+          var days_diff = Math.abs(daysBetween(today, age_date));
+
+          tag_string = "order:score " + "age:" + days_diff +"days";
+      }
+
+      page = 1;
+      random = false;
+      limit = 20;
+
+    }
+    if (amount_tag.length > 0){
+      tags.splice(tags.indexOf(popular_tag[0]), 1)
+      amount_value = amount_tag[0].split(":")[1];
+      amount = Number(amount_value);
+
+      if (amount > 4){
+          message.channel.send("Too many images! Baka!!!");
+          return;
+      }
+    }
+
+    if (tag_string.split(" ").length > 2){
+        message.channel.send("Too many tags! Baka!!!");
+    }
 
     tag_string = tag_string.replace(",", " ");
 
-    var postArray = await(Booru.posts({
-      limit: 1,
-      tags: tag_string + score_string,
-      random: true,
-    }));
-
-    while (postArray.length != 1 && score >= 10){
-        score -= 1;
-        score_string = "score:" + String(score);
-        postArray = await(Booru.posts({
-          limit: 1,
-          tags: tag_string + score_string,
-          random: true,
-        }));
-    };
+    if (random){
+      var postArray = await(Booru.posts({
+        limit: limit,
+        tags: tag_string + score_string,
+        random: random,
+        page: page,
+      }));
+    }
+    else {
+       var postArray = await(Booru.posts({
+        limit: limit,
+        tags: tag_string + score_string,
+        page: page,
+      }));
+    }
 
     if (postArray.length <= 0){
         var source_link = "No matches found!";
     }
+    else if (postArray.length > 1){
+      if (amount > 1){
+        if (amount <= 4){
+            for (var i = 0; i < amount; i++) {
+              var source_link = "http://danbooru.donmai.us" + postArray[i].raw.file_url;
+              message.channel.send(source_link)
+            }
+        }
+        else{
+            message.channel.send("Too many images! Baka!!!");
+        }
+      }
+      else {
+          var post = postArray[Math.floor(Math.random()*postArray.length)];
+          var source_link = "http://danbooru.donmai.us" + post.raw.file_url;
+          message.channel.send(source_link)
+      }
+    }
     else{
         var source_link = "http://danbooru.donmai.us" + postArray[0].raw.file_url;
+        message.channel.send(source_link);
     }
-    message.channel.send(source_link);
+
 };
 
 function phrase_pos(array, main, phrase, left, right){
@@ -312,12 +431,12 @@ bot.on("message", function(message)
 
   if (msg_pieces[0] === "HONOKA" && msg_pieces[1] === "LEWD"){
     if (message.channel.id == 139536008734572544 || message.channel.id == 153707500070371328){
-        if (msg_pieces.length > 4){
-           message.channel.send("There was an error!");
-        }
-        else{
-            search_image(msg_pieces, message);
-        }
+        // if (msg_pieces.length > 4){
+        //    message.channel.send("There was an error!");
+        // }
+        // else{
+        search_image(msg_pieces, message);
+        // }
     }
     else {
         message.channel.send('https://cdn.discordapp.com/attachments/153707500070371328/320824984651956224/honokashy.gif');
