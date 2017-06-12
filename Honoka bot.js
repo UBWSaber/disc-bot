@@ -246,7 +246,7 @@ var search_image = async function(msg_pieces, message){
     var score_string = '';
     var tags = msg_pieces.slice(2,msg_pieces.length);
     var tag_string = String(tags);
-    var random = true;
+    var random = !message.content.includes("RANDOM:TRUE");
     var limit = 10;
     var page = 1;
     var amount = 1;
@@ -262,10 +262,6 @@ var search_image = async function(msg_pieces, message){
     amount_tag = tags.filter(function( obj ) {
       return obj.includes("AMOUNT:");
     });
-
-    // random_tag = tags.filter(function( obj ) {
-    //   return obj.includes("RANDOM:");
-    // });
 
     if (amount_tag.length > 0){
       tags.splice(tags.indexOf(amount_tag[0]), 1)
@@ -314,12 +310,12 @@ var search_image = async function(msg_pieces, message){
     if (tag_string.split(" ").length > 2){
         message.channel.send("Too many tags! Baka!!!");
     }
-    if (tag_string.includes("order:score")){
+    if (tag_string.includes("order:")){
         random = false;
     }
 
     tag_string = tag_string.replace(",", " ");
-
+    console.log(tag_string);
     if (random){
       var postArray = await(Booru.posts({
         limit: limit,
@@ -336,8 +332,10 @@ var search_image = async function(msg_pieces, message){
       }));
     }
 
+    var source_link = "http://danbooru.donmai.us"
+
     if (postArray.length <= 0){
-        var source_link = "No matches found!";
+        source_link = "No matches found!";
     }
     else if (postArray.length > 1){
       if (amount > 1){
@@ -346,27 +344,27 @@ var search_image = async function(msg_pieces, message){
             for (var i = 0; i < amount; i++) {
 
               var post = get_another_item(postArray, already_posted, postArray[Math.floor(Math.random()*postArray.length)])
-              var source_link = "http://danbooru.donmai.us" + post.raw.file_url;
+              source_link += post.raw.file_url;
 
               message.channel.send(source_link);
-              already_posted.push(post);
             }
+
+            return;
         }
         else{
-            message.channel.send("Too many images! Baka!!!");
+            source_link = "Too many images! Baka!!!";
         }
       }
       else {
           var post = postArray[Math.floor(Math.random()*postArray.length)];
-          var source_link = "http://danbooru.donmai.us" + post.raw.file_url;
-          message.channel.send(source_link)
+          source_link += post.raw.file_url;
       }
     }
     else{
-        var source_link = "http://danbooru.donmai.us" + postArray[0].raw.file_url;
-        message.channel.send(source_link);
-    }
+        source_link += postArray[0].raw.file_url;
 
+    }
+    message.channel.send(source_link);
 };
 
 function phrase_pos(array, main, phrase, left, right){
