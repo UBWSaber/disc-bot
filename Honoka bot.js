@@ -344,7 +344,7 @@ var search_image = async function(msg_pieces, message){
             for (var i = 0; i < amount; i++) {
 
               var post = get_another_item(postArray, already_posted, postArray[Math.floor(Math.random()*postArray.length)])
-              source_link = "http://danbooru.donmai.us" +  post.raw.file_url;
+              source_link +=  post.raw.file_url;
 
               message.channel.send(source_link);
             }
