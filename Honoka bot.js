@@ -331,8 +331,8 @@ var search_image = async function(msg_pieces, message){
         page: page,
       }));
     }
-
-    var source_link = "http://danbooru.donmai.us";
+    //base url no longer required
+    var source_link = "";//"http://danbooru.donmai.us";
 
     if (postArray.length <= 0){
         source_link = "No matches found!";
@@ -361,7 +361,7 @@ var search_image = async function(msg_pieces, message){
       }
     }
     else{
-        source_link += postArray[0].file_url;
+        source_link += postArray[0].source;
 
     }
     message.channel.send(source_link);
