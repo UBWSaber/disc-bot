@@ -361,7 +361,7 @@ var search_image = async function(msg_pieces, message){
       }
     }
     else{
-        source_link += postArray[0].raw.file_url;
+        source_link += postArray[0].file_url;
 
     }
     message.channel.send(source_link);
