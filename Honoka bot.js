@@ -365,7 +365,7 @@ var search_image = async function(msg_pieces, message){
 
     }
     message.channel.send(source_link);
-    message.channel.send("is this even the right repo");
+    //message.channel.send("is this even the right repo");
 };
 
 function phrase_pos(array, main, phrase, left, right){
