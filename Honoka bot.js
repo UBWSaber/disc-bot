@@ -344,7 +344,7 @@ var search_image = async function(msg_pieces, message){
             for (var i = 0; i < amount; i++) {
 
               var post = get_another_item(postArray, already_posted, postArray[Math.floor(Math.random()*postArray.length)])
-              source_link +=  post.raw.file_url;
+              source_link = post.raw.file_url;
 
               message.channel.send(source_link);
             }
@@ -361,7 +361,7 @@ var search_image = async function(msg_pieces, message){
       }
     }
     else{
-        source_link += postArray[0].source;
+        source_link += postArray[0].raw.file_urk;
 
     }
     message.channel.send(source_link);
