@@ -1,3 +1,5 @@
+import { name, login } from "settings.js";
+
 var Discord = require("discord.js");
 var fs = require("fs");
 var linesFile = "lines.json";
@@ -11,11 +13,9 @@ var all_lines = JSON.parse(file1);
 var lines = all_lines["lines1"];
 var lines2 = all_lines["lines2"];
 var lines3 = all_lines["lines3"];
-//var cleverbot = require("cleverbot.io");
 
-//var bot2 = new cleverbot("zxQJgE2hS6Lc8HvK", "myaSMhMQWFvgMTGlruZak0isSk9iFMCB");
 var bot = new Discord.Client();
-var Booru = new Danbooru("SuddenPanic", "5ls4P7qQj2G7tn-qI4Qn32vfmovjULHDho7F-f0eeCs");
+var Booru = new Danbooru(name);
 
 var picture_path = "pics/";
 
@@ -488,7 +488,7 @@ bot.on("message", function(message)
 });
 
 //HOnoka login
-bot.login("MzIwMzU5Njk2MTc3Mjk5NDU2.DBOVwQ.xW2PegD08IoX17GLzOG2i_H8zSI");
+bot.login(login);
 
 //Chika login
 //bot.login("MjM5NTk2NjY0ODQxNTY4MjU3.DBVCiQ.A2ySg03qFMfkKSoPeJ4OcHw7kiQ");
