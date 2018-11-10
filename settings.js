@@ -1,0 +1,2 @@
+var login = "";
+var name = ""
