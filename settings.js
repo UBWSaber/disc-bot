@@ -1,2 +1,0 @@
-var login = "";
-var name = ""
