@@ -453,7 +453,7 @@ bot.on("message", function(message)
   }
 
   if (msg_pieces[0] === "HONOKA" && msg_pieces[1] === "LEWD"){
-    if (message.channel.id == 139536008734572544 || message.channel.id == 153707500070371328){
+    if (message.channel.id == 139536008734572544 || message.channel.id == 510870897440194577){
         // if (msg_pieces.length > 4){
         //    message.channel.send("There was an error!");
         // }
