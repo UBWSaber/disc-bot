@@ -18,7 +18,6 @@ var lines2 = all_lines["lines2"];
 var lines3 = all_lines["lines3"];
 
 var bot = new Discord.Client();
-console.log(settings);
 var Booru = new Danbooru(dan_name, dan_token);
 
 var picture_path = "pics/";
