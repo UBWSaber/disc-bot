@@ -1,4 +1,7 @@
-import { name, login } from "settings.js";
+var settings = require("./settings.js");
+var login = settings.login;
+var dan_name = settings.dan_name;
+var dan_token = settings.dan_token;
 
 var Discord = require("discord.js");
 var fs = require("fs");
@@ -15,7 +18,8 @@ var lines2 = all_lines["lines2"];
 var lines3 = all_lines["lines3"];
 
 var bot = new Discord.Client();
-var Booru = new Danbooru(name);
+console.log(settings);
+var Booru = new Danbooru(dan_name, dan_token);
 
 var picture_path = "pics/";
 
