@@ -364,7 +364,7 @@ var search_image = async function(msg_pieces, message){
       }
     }
     else{
-        source_link += postArray[0].raw.file_urk;
+        source_link += postArray[0].raw.file_url;
 
     }
     message.channel.send(source_link);
@@ -440,10 +440,9 @@ bot.on("message", function(message)
   var author = message.member;
   var is_umi = (author.id == umi_id);
   var is_me = (author.id == 101816989101592576);
-  var honoka_role = message.guild.roles.get("name", "Honoka");
+  var honoka_role = message.guild.roles.get("name", "Honoka Bot");
   var input = message.content.toUpperCase();
   var msg_pieces = input.split(" ");
-  bot.user.setUsername("Honoka")
   if (input === "HONOKA STOP"){
     bot.voiceConnections.array()[0].disconnect();
   }
